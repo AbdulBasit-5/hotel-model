@@ -1,0 +1,648 @@
+<div class="dashboard-wrapper">
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-group">
+        <div class="brand-badge-icon" aria-hidden="true">🏨</div>
+        <div>
+          <h1 class="brand-title">Hotel Cancellation Intelligence</h1>
+          <p class="brand-subtitle">
+            Reproducibility Platform · Leakage Remediation · Honest Protocol Benchmarks
+          </p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Stage Notice Badge -->
+        <div class="stage-badge" title="Current scope">
+          <span class="stage-tag active">Stage 1: Binary Classification</span>
+          <span class="stage-tag future">Stage 2: Time-to-Cancellation (Future Work)</span>
+        </div>
+
+        <!-- API Connection Pill -->
+        <button class="status-pill" [class.online]="apiOnline()" [class.offline]="!apiOnline()" (click)="checkFlaskHealth()" title="Click to refresh connection">
+          <span class="status-dot"></span>
+          <span class="status-label">{{ apiStatusText() }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs-wrapper" aria-label="Main Navigation">
+      <div class="nav-tabs">
+        <button class="nav-tab-btn" [class.active]="activeTab() === 'overview'" (click)="setTab('overview')" id="tab-overview">
+          <span class="tab-icon">📊</span> Executive Overview & Leakage
+        </button>
+        <button class="nav-tab-btn" [class.active]="activeTab() === 'benchmarks'" (click)="setTab('benchmarks')" id="tab-benchmarks">
+          <span class="tab-icon">⚡</span> Model Benchmarks (5 Models × 3 Protocols)
+        </button>
+        <button class="nav-tab-btn" [class.active]="activeTab() === 'gate1'" (click)="setTab('gate1')" id="tab-gate1">
+          <span class="tab-icon">🎯</span> Gate 1 Check & TabNet Paper
+        </button>
+        <button class="nav-tab-btn" [class.active]="activeTab() === 'simulator'" (click)="setTab('simulator')" id="tab-simulator">
+          <span class="tab-icon">🔮</span> Live Prediction Simulator
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="app-main-content">
+
+    <!-- ========================================== -->
+    <!-- TAB 1: EXECUTIVE OVERVIEW -->
+    <!-- ========================================== -->
+    <section *ngIf="activeTab() === 'overview'" class="tab-pane animate-fade-in" aria-labelledby="tab-overview">
+      <div class="section-header">
+        <div class="badge-tag">Academic Research & Methodology</div>
+        <h2 class="section-heading">Research Overview & Critical Discoveries</h2>
+        <p class="section-desc">Analysis of the Antonio et al. (2019) Hotel Booking Demand dataset (119,390 bookings) investigating data leakage, duplicate record contamination, and protocol-dependent evaluation.</p>
+      </div>
+
+      <!-- Scope Notice Banner -->
+      <div class="research-scope-banner">
+        <span class="scope-icon">ℹ️</span>
+        <div>
+          <strong>Project Scope & Research Integrity Notice:</strong> This platform addresses <strong>Stage 1 (Binary Cancellation Prediction: `is_canceled`)</strong>. Predicting the exact duration or time-to-cancellation requires separate survival analysis modeling and is designated as <strong>Stage 2 (Future Work)</strong>.
+        </div>
+      </div>
+
+      <!-- KPI Grid -->
+      <div class="kpi-grid">
+        <div class="kpi-card card-blue">
+          <div class="kpi-header">
+            <span class="kpi-label">TOTAL DATASET SIZE</span>
+            <span class="kpi-icon">📁</span>
+          </div>
+          <div class="kpi-value">119,390</div>
+          <div class="kpi-footer">City Hotel: 79,330 · Resort Hotel: 40,060</div>
+        </div>
+
+        <div class="kpi-card card-amber">
+          <div class="kpi-header">
+            <span class="kpi-label">BASELINE CANCELLATION RATE</span>
+            <span class="kpi-icon">⚠️</span>
+          </div>
+          <div class="kpi-value">37.0%</div>
+          <div class="kpi-footer">City: 41.7% · Resort: 27.8%</div>
+        </div>
+
+        <div class="kpi-card card-rose">
+          <div class="kpi-header">
+            <span class="kpi-label">DUPLICATE ROW LEAKAGE</span>
+            <span class="kpi-icon">🔍</span>
+          </div>
+          <div class="kpi-value">31,994</div>
+          <div class="kpi-footer"><span class="highlight-warn">26.8%</span> exact duplicate records discovered</div>
+        </div>
+
+        <div class="kpi-card card-emerald">
+          <div class="kpi-header">
+            <span class="kpi-label">EVALUATED ML ALGORITHMS</span>
+            <span class="kpi-icon">🚀</span>
+          </div>
+          <div class="kpi-value">6 Models</div>
+          <div class="kpi-footer">CatBoost, LightGBM, XGBoost, RF, LR, TabNet</div>
+        </div>
+      </div>
+
+      <!-- Hotel Distribution & Leakage Analysis Grid -->
+      <div class="two-col-grid">
+        <!-- Dual Hotel Comparison -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3 class="panel-title">🏨 Hotel Dataset Distribution & Duplicate Impact</h3>
+          </div>
+          <p class="panel-desc">Exact duplicate records inflate naive random test splits. Removing duplicates changes row counts and apparent cancellation rates:</p>
+          
+          <div class="hotel-stats-list">
+            <div class="hotel-stat-box">
+              <div class="hotel-stat-header">
+                <span class="hotel-stat-name">City Hotel (H2)</span>
+                <span class="badge-pill pill-cyan">Urban Property</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-name">Raw Bookings:</span>
+                <span class="stat-num">79,330 rows (41.7% canceled)</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-name">Deduplicated Bookings:</span>
+                <span class="stat-num">53,428 rows (30.0% canceled)</span>
+              </div>
+              <div class="diff-chip danger">Duplicate Contamination: 25,902 rows (32.6%)</div>
+            </div>
+
+            <div class="hotel-stat-box">
+              <div class="hotel-stat-header">
+                <span class="hotel-stat-name">Resort Hotel (H1)</span>
+                <span class="badge-pill pill-purple">Leisure Property</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-name">Raw Bookings:</span>
+                <span class="stat-num">40,060 rows (27.8% canceled)</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-name">Deduplicated Bookings:</span>
+                <span class="stat-num">33,968 rows (23.5% canceled)</span>
+              </div>
+              <div class="diff-chip warning">Duplicate Contamination: 6,092 rows (15.2%)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Strict Data Leakage Controls -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3 class="panel-title">🛡️ Strict Leakage Controls Implemented</h3>
+          </div>
+          <p class="panel-desc">Preventing post-event information leakage is fundamental to honest academic evaluation:</p>
+
+          <div class="leakage-cards">
+            <div class="leak-item leak-danger">
+              <div class="leak-title">🚫 Absolute Target Leakage (Permanently Excluded)</div>
+              <p class="leak-text"><code>reservation_status</code> (Check-Out, Canceled, No-Show) and <code>reservation_status_date</code> give away the cancellation outcome with 100% certainty. Any published paper retaining these has invalid findings.</p>
+            </div>
+
+            <div class="leak-item leak-warning">
+              <div class="leak-title">⚠️ Risky Operational Features (Ablated)</div>
+              <p class="leak-text"><code>assigned_room_type</code>, <code>booking_changes</code>, and <code>days_in_waiting_list</code> can update after initial booking. Our ablation study isolates and assesses their impact.</p>
+            </div>
+
+            <div class="leak-item leak-info">
+              <div class="leak-title">📅 Time-Honest Splitting (Protocol 3)</div>
+              <p class="leak-text">Random splitting mixes future bookings into training. Protocol 3 enforces chronological training on past bookings up to Feb 2017 and testing on future unseen arrivals.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Protocol Definition Cards -->
+      <div class="panel-card mt-6">
+        <div class="panel-header">
+          <h3 class="panel-title">🔬 The Three Experimental Protocols (Academic Contribution)</h3>
+        </div>
+        <div class="protocols-grid">
+          <div class="protocol-card proto-p1">
+            <div class="proto-tag">Protocol 1</div>
+            <h4 class="proto-name">P1: Random Split, Raw Data</h4>
+            <p class="proto-desc">Standard 80/20 random stratified split on raw data with duplicates present. Matches naive literature benchmarks. Yields overly optimistic AUC-ROC scores (~0.96) due to duplicate memorization.</p>
+            <div class="proto-status warn">⚠️ Inflated by row duplication</div>
+          </div>
+
+          <div class="protocol-card proto-p2">
+            <div class="proto-tag">Protocol 2</div>
+            <h4 class="proto-name">P2: Random Split, Deduplicated</h4>
+            <p class="proto-desc">Eliminates all 31,994 exact duplicates prior to an 80/20 random stratified split. Prevents row leakage between train and test folds. AUC drops to realistic ~0.94 (Resort) and ~0.83 (City).</p>
+            <div class="proto-status ok">✓ Leakage-free split</div>
+          </div>
+
+          <div class="protocol-card proto-p3">
+            <div class="proto-tag">Protocol 3</div>
+            <h4 class="proto-name">P3: Time-Based Split, Deduplicated</h4>
+            <p class="proto-desc">Strict chronological order on deduplicated data. Trains strictly on past arrivals and evaluates on future arrivals. Represents genuine real-world production performance (Resort AUC ~0.88, City AUC ~0.83).</p>
+            <div class="proto-status best">★ Most Honest Benchmark</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: MODEL BENCHMARKS -->
+    <!-- ========================================== -->
+    <section *ngIf="activeTab() === 'benchmarks'" class="tab-pane animate-fade-in" aria-labelledby="tab-benchmarks">
+      <div class="section-header">
+        <div class="badge-tag">Empirical Results</div>
+        <h2 class="section-heading">Model Benchmarking Matrix</h2>
+        <p class="section-desc">Comparing 5 core algorithms + TabNet across 3 evaluation protocols and 2 hotel properties over 5 seeds.</p>
+      </div>
+
+      <!-- Filters & Controls Bar -->
+      <div class="filters-card">
+        <div class="filter-group">
+          <span class="filter-label">Filter Hotel:</span>
+          <div class="button-toggle-group">
+            <button class="toggle-btn" [class.active]="selectedHotel() === 'ALL'" (click)="setHotel('ALL')">All Hotels</button>
+            <button class="toggle-btn" [class.active]="selectedHotel() === 'H1'" (click)="setHotel('H1')">H1 (Resort)</button>
+            <button class="toggle-btn" [class.active]="selectedHotel() === 'H2'" (click)="setHotel('H2')">H2 (City)</button>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <span class="filter-label">Filter Protocol:</span>
+          <div class="button-toggle-group">
+            <button class="toggle-btn" [class.active]="selectedProtocol() === 'ALL'" (click)="setProtocol('ALL')">All Protocols</button>
+            <button class="toggle-btn" [class.active]="selectedProtocol() === 'P1'" (click)="setProtocol('P1')">P1 (Raw)</button>
+            <button class="toggle-btn" [class.active]="selectedProtocol() === 'P2'" (click)="setProtocol('P2')">P2 (Dedup)</button>
+            <button class="toggle-btn" [class.active]="selectedProtocol() === 'P3'" (click)="setProtocol('P3')">P3 (Time-based)</button>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label for="metric-select" class="filter-label">Sort Metric:</label>
+          <select id="metric-select" class="custom-select" [ngModel]="selectedMetric()" (ngModelChange)="setMetric($event)">
+            <option value="auc_roc">AUC-ROC (Discriminative Power)</option>
+            <option value="auc_pr">AUC-PR (Precision-Recall Curve)</option>
+            <option value="f1">F1 Score</option>
+            <option value="accuracy">Accuracy</option>
+            <option value="precision">Precision</option>
+            <option value="recall">Recall</option>
+            <option value="brier">Brier Score Loss (Calibration)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Top Visual Comparison Bars -->
+      <div class="panel-card mb-6">
+        <div class="panel-header">
+          <h3 class="panel-title">📈 Visual Ranking: {{ getMetricLabel(selectedMetric()) }}</h3>
+          <span class="metric-note">Ranked from highest to lowest</span>
+        </div>
+        
+        <div class="bar-chart-container">
+          <div *ngFor="let row of getFilteredBenchmarks().slice(0, 8)" class="chart-bar-row">
+            <div class="bar-info">
+              <span class="bar-model-name">{{ row.model }}</span>
+              <span class="bar-meta">{{ row.hotel }} · {{ row.protocol }}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" [style.width.%]="getMetricValue(row) * 100" [class.best-bar]="getMetricValue(row) >= 0.95"></div>
+            </div>
+            <div class="bar-val-badge">
+              {{ getMetricValue(row).toFixed(4) }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comprehensive Data Table -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <h3 class="panel-title">📋 Full Evaluation Matrix (Mean ± Std over 5 Seeds)</h3>
+          <span class="results-count">{{ getFilteredBenchmarks().length }} configurations</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>Hotel</th>
+                <th>Protocol</th>
+                <th>Model</th>
+                <th>AUC-ROC</th>
+                <th>AUC-PR</th>
+                <th>F1 Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>Brier Loss</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let b of getFilteredBenchmarks()" [class.highlight-row]="b.auc_roc >= 0.95">
+                <td><span class="hotel-pill" [class.h1]="b.hotel.includes('H1')" [class.h2]="b.hotel.includes('H2')">{{ b.hotel }}</span></td>
+                <td><span class="proto-pill" [class.p1]="b.protocol.includes('P1')" [class.p2]="b.protocol.includes('P2')" [class.p3]="b.protocol.includes('P3')">{{ b.protocol }}</span></td>
+                <td><strong class="model-strong">{{ b.model }}</strong></td>
+                <td class="metric-num highlight-bold">{{ b.auc_roc.toFixed(4) }} <small *ngIf="b.auc_roc_std > 0" class="std-text">±{{ b.auc_roc_std.toFixed(4) }}</small></td>
+                <td class="metric-num">{{ b.auc_pr.toFixed(4) }}</td>
+                <td class="metric-num">{{ b.f1.toFixed(4) }}</td>
+                <td class="metric-num">{{ (b.accuracy * 100).toFixed(1) }}%</td>
+                <td class="metric-num">{{ (b.precision * 100).toFixed(1) }}%</td>
+                <td class="metric-num">{{ (b.recall * 100).toFixed(1) }}%</td>
+                <td class="metric-num brier-col">{{ b.brier.toFixed(4) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: GATE 1 CHECK & TABNET PAPER -->
+    <!-- ========================================== -->
+    <section *ngIf="activeTab() === 'gate1'" class="tab-pane animate-fade-in" aria-labelledby="tab-gate1">
+      <div class="section-header">
+        <div class="badge-tag">Academic Verification</div>
+        <h2 class="section-heading">Gate 1 Check: Reproduction vs Published Literature</h2>
+        <p class="section-desc">Critically evaluating published claims of TabNet (Tabular Deep Learning) against our reproduced TabNet and gradient-boosted decision trees.</p>
+      </div>
+
+      <!-- Published vs Our TabNet Cards -->
+      <div class="two-col-grid mb-6">
+        <div *ngFor="let item of tabnetData()" class="comparison-card">
+          <div class="comp-card-header">
+            <h3 class="comp-hotel-title">{{ item.hotel }}</h3>
+            <span class="badge-pill pill-cyan">Protocol 1 (Random Split)</span>
+          </div>
+
+          <div class="metric-comparison-box">
+            <div class="metric-compare-row">
+              <span class="metric-lbl">Published Paper AUC-ROC (TabNet):</span>
+              <span class="metric-old">{{ item.published_auc_roc.toFixed(3) }}</span>
+            </div>
+            <div class="metric-compare-row highlight">
+              <span class="metric-lbl">Our Reproduced TabNet AUC-ROC:</span>
+              <span class="metric-new">{{ item.our_tabnet_auc_roc.toFixed(4) }}</span>
+            </div>
+            <div class="metric-delta positive">
+              ▲ Exceeds Published by +{{ item.diff_auc_roc.toFixed(4) }} (+{{ (item.diff_auc_roc * 100).toFixed(2) }}%)
+            </div>
+          </div>
+
+          <div class="best-baseline-box">
+            <div class="baseline-header">
+              <span class="baseline-title">Our Best Tree Model Baseline:</span>
+              <span class="badge-pill pill-emerald">{{ item.best_p1_model }}</span>
+            </div>
+            <div class="baseline-score">
+              AUC-ROC: <strong>{{ item.best_p1_auc_roc.toFixed(4) }}</strong>
+            </div>
+            <p class="baseline-note">Standard GBDTs (XGBoost/RandomForest) convincingly outperform TabNet while training in a fraction of the time.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risky Columns Ablation Study -->
+      <div class="panel-card mb-6">
+        <div class="panel-header">
+          <h3 class="panel-title">🧪 Ablation Study: Impact of Risky Columns under Protocol 3</h3>
+          <span class="panel-sub">CatBoost on Time-based Split</span>
+        </div>
+        <p class="panel-desc">Evaluating whether removing post-booking variables (<code>assigned_room_type</code>, <code>booking_changes</code>, <code>days_in_waiting_list</code>) impacts model generalization:</p>
+
+        <div class="table-responsive">
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>Hotel</th>
+                <th>Feature Set</th>
+                <th>AUC-ROC</th>
+                <th>AUC-PR</th>
+                <th>F1 Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>Brier Loss</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let abl of ablationData()" [class.highlight-row]="abl.features.includes('All')">
+                <td><span class="hotel-pill" [class.h1]="abl.hotel.includes('H1')" [class.h2]="abl.hotel.includes('H2')">{{ abl.hotel }}</span></td>
+                <td><strong>{{ abl.features }}</strong></td>
+                <td class="metric-num highlight-bold">{{ abl.auc_roc.toFixed(4) }}</td>
+                <td class="metric-num">{{ abl.auc_pr.toFixed(4) }}</td>
+                <td class="metric-num">{{ abl.f1.toFixed(4) }}</td>
+                <td class="metric-num">{{ (abl.accuracy * 100).toFixed(1) }}%</td>
+                <td class="metric-num">{{ (abl.precision * 100).toFixed(1) }}%</td>
+                <td class="metric-num">{{ (abl.recall * 100).toFixed(1) }}%</td>
+                <td class="metric-num brier-col">{{ abl.brier.toFixed(4) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Academic Conclusions Card -->
+      <div class="panel-card conclusion-box">
+        <h3 class="conclusion-title">💡 Academic Summary for Evaluation & Defense</h3>
+        <ul class="conclusion-list">
+          <li><strong>Literature Gap Explained:</strong> The published paper reported lower TabNet AUC-ROC (0.846 - 0.862) primarily due to differing preprocessing or missing hyperparameter tuning, whereas our standard setup reaches ~0.93 - 0.94 on P1.</li>
+          <li><strong>Tree-based Superiority:</strong> CatBoost, XGBoost, and LightGBM consistently achieve higher AUC-ROC (~0.96) than TabNet on tabular hotel data while eliminating heavy PyTorch GPU overhead.</li>
+          <li><strong>The Reality Check of Protocol 3:</strong> Time-based split shows that real-world deployment metrics drop by ~8-12% compared to random splits. Models deployed in production must be evaluated on future arrivals, not past duplicates.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: LIVE PREDICTION SIMULATOR -->
+    <!-- ========================================== -->
+    <section *ngIf="activeTab() === 'simulator'" class="tab-pane animate-fade-in" aria-labelledby="tab-simulator">
+      <div class="section-header">
+        <div class="badge-tag">Interactive Simulation</div>
+        <h2 class="section-heading">Real-Time Cancellation Simulator</h2>
+        <p class="section-desc">Test reservation parameters to trigger real-time ML inference powered by our Flask backend model pipeline.</p>
+      </div>
+
+      <!-- Deployed Model Scope Disclaimer -->
+      <div class="deployed-model-disclaimer">
+        <span class="disc-icon">⚠️</span>
+        <div>
+          <strong>Deployed Classifier Note:</strong> Live predictions are generated by a <code>HistGradientBoostingClassifier</code> pipeline evaluated on an 80/20 random stratified split of the raw dataset (validation AUC: <strong>94.84%</strong>, accuracy: <strong>87.57%</strong>). For genuine real-world generalization without duplicate leakage, refer to <strong>Protocol 3 benchmarks</strong> in the Model Benchmarks tab.
+        </div>
+      </div>
+
+      <!-- Presets Toolbar -->
+      <div class="presets-bar">
+        <span class="presets-label">⚡ Test Scenarios:</span>
+        <button class="preset-btn btn-danger-soft" (click)="applyPreset('high-risk')">
+          🔴 High-Risk OTA Booking (Far in Advance)
+        </button>
+        <button class="preset-btn btn-success-soft" (click)="applyPreset('safe-resort')">
+          🟢 Safe Family Vacation (Short Lead Time)
+        </button>
+        <button class="preset-btn btn-blue-soft" (click)="applyPreset('corporate')">
+          🔵 Corporate Frequent Traveler
+        </button>
+      </div>
+
+      <!-- Two-Column Simulator Layout -->
+      <div class="sim-grid">
+        <!-- Form Controls -->
+        <div class="sim-form-card">
+          <h3 class="sim-form-title">Reservation Parameters</h3>
+
+          <div class="form-grid">
+            <!-- Hotel Property -->
+            <div class="form-group">
+              <label for="hotel-select" class="form-label">Hotel Property</label>
+              <select id="hotel-select" class="form-control" [(ngModel)]="simForm.hotel">
+                <option value="City Hotel">City Hotel (Urban)</option>
+                <option value="Resort Hotel">Resort Hotel (Leisure)</option>
+              </select>
+            </div>
+
+            <!-- Deposit Type -->
+            <div class="form-group">
+              <label for="deposit-select" class="form-label">Deposit Type</label>
+              <select id="deposit-select" class="form-control" [(ngModel)]="simForm.deposit_type">
+                <option value="No Deposit">No Deposit</option>
+                <option value="Non Refund">Non Refund (High Risk Indicator)</option>
+                <option value="Refundable">Refundable</option>
+              </select>
+            </div>
+
+            <!-- Market Segment -->
+            <div class="form-group">
+              <label for="market-select" class="form-label">Market Segment</label>
+              <select id="market-select" class="form-control" [(ngModel)]="simForm.market_segment">
+                <option value="Online TA">Online Travel Agent (Online TA)</option>
+                <option value="Offline TA/TO">Offline TA/TO</option>
+                <option value="Direct">Direct Booking</option>
+                <option value="Corporate">Corporate</option>
+                <option value="Groups">Tour Groups</option>
+              </select>
+            </div>
+
+            <!-- Customer Type -->
+            <div class="form-group">
+              <label for="customer-select" class="form-label">Customer Type</label>
+              <select id="customer-select" class="form-control" [(ngModel)]="simForm.customer_type">
+                <option value="Transient">Transient</option>
+                <option value="Transient-Party">Transient-Party</option>
+                <option value="Contract">Contract</option>
+                <option value="Group">Group</option>
+              </select>
+            </div>
+
+            <!-- Lead Time Slider -->
+            <div class="form-group col-span-2">
+              <div class="slider-header">
+                <label for="lead-time-input" class="form-label">Lead Time (Days between booking & arrival)</label>
+                <span class="slider-val">{{ simForm.lead_time }} days</span>
+              </div>
+              <input id="lead-time-input" type="range" min="0" max="400" step="1" class="custom-range" [(ngModel)]="simForm.lead_time">
+              <div class="slider-ticks">
+                <span>0d (Same Day)</span>
+                <span>100d</span>
+                <span>200d</span>
+                <span>300d</span>
+                <span>400d</span>
+              </div>
+            </div>
+
+            <!-- Special Requests -->
+            <div class="form-group">
+              <label for="special-req-input" class="form-label">Special Requests (Retention signal)</label>
+              <input id="special-req-input" type="number" min="0" max="5" class="form-control" [(ngModel)]="simForm.total_of_special_requests">
+            </div>
+
+            <!-- Parking Spaces -->
+            <div class="form-group">
+              <label for="parking-select" class="form-label">Car Parking Spaces (Safe signal)</label>
+              <select id="parking-select" class="form-control" [(ngModel)]="simForm.required_car_parking_spaces">
+                <option [ngValue]="0">0 (No Parking)</option>
+                <option [ngValue]="1">1 Space Requested</option>
+                <option [ngValue]="2">2 Spaces</option>
+              </select>
+            </div>
+
+            <!-- Previous Cancellations -->
+            <div class="form-group">
+              <label for="prev-cancel-input" class="form-label">Previous Cancellations (History)</label>
+              <input id="prev-cancel-input" type="number" min="0" max="10" class="form-control" [(ngModel)]="simForm.previous_cancellations">
+            </div>
+
+            <!-- Repeated Guest -->
+            <div class="form-group">
+              <label for="repeated-guest-select" class="form-label">Repeated Guest</label>
+              <select id="repeated-guest-select" class="form-control" [(ngModel)]="simForm.is_repeated_guest">
+                <option [ngValue]="0">No (First Time Guest)</option>
+                <option [ngValue]="1">Yes (Loyal Returning Guest)</option>
+              </select>
+            </div>
+
+            <!-- ADR (Average Daily Rate) -->
+            <div class="form-group">
+              <label for="adr-input" class="form-label">Average Daily Rate (ADR $)</label>
+              <input id="adr-input" type="number" min="10" max="600" class="form-control" [(ngModel)]="simForm.adr">
+            </div>
+
+            <!-- Reserved Room Type -->
+            <div class="form-group">
+              <label for="room-select" class="form-label">Room Category</label>
+              <select id="room-select" class="form-control" [(ngModel)]="simForm.reserved_room_type">
+                <option value="A">Room Type A (Standard)</option>
+                <option value="D">Room Type D (Deluxe)</option>
+                <option value="E">Room Type E (Suite)</option>
+                <option value="F">Room Type F (Family)</option>
+                <option value="G">Room Type G (Executive)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="sim-actions">
+            <button class="predict-btn" [disabled]="isPredicting()" (click)="runPrediction()">
+              <span *ngIf="!isPredicting()">🚀 Predict Cancellation Risk</span>
+              <span *ngIf="isPredicting()">⚡ Querying Flask Backend...</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Prediction Outcome Display HUD -->
+        <div class="sim-result-card">
+          <div class="result-header">
+            <span class="hud-label">ML MODEL PREDICTION HUD</span>
+            <span *ngIf="predictionResult()" class="badge-pill" [class.pill-rose]="predictionResult().risk_level === 'HIGH'" [class.pill-amber]="predictionResult().risk_level === 'MEDIUM'" [class.pill-emerald]="predictionResult().risk_level === 'LOW'">
+              {{ predictionResult().risk_level }} RISK
+            </span>
+          </div>
+
+          <!-- Offline / Error State Notice (Honest Messaging, No Fake Predictions) -->
+          <div *ngIf="predictionError()" class="sim-error-box">
+            <div class="error-icon">⚠️</div>
+            <div class="error-content">
+              <h4 class="error-heading">Flask Service Unavailable</h4>
+              <p class="error-text">{{ predictionError() }}</p>
+              <p class="error-sub">For local testing: run <code>python backend/app.py</code> in your terminal and reload.</p>
+            </div>
+          </div>
+
+          <!-- Active Prediction Display -->
+          <div *ngIf="predictionResult() && !predictionError()">
+            <!-- Gauge Display -->
+            <div class="gauge-section">
+              <div class="prob-circle" [class.prob-high]="predictionResult().probability_percentage >= 65" [class.prob-med]="predictionResult().probability_percentage >= 35 && predictionResult().probability_percentage < 65" [class.prob-low]="predictionResult().probability_percentage < 35">
+                <span class="prob-pct">{{ predictionResult().probability_percentage }}%</span>
+                <span class="prob-sub">Cancellation Probability</span>
+              </div>
+
+              <div class="prediction-outcome-text">
+                <div class="outcome-badge" [class.outcome-cancel]="predictionResult().prediction === 1" [class.outcome-keep]="predictionResult().prediction === 0">
+                  {{ predictionResult().prediction === 1 ? '⚠️ LIKELY TO CANCEL' : '✓ EXPECTED TO CHECK IN' }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Factor Breakdown (Qualitative Indicators) -->
+            <div class="factors-section">
+              <h4 class="factors-title">
+                Qualitative Risk Indicators:
+                <small class="factors-disclaimer">(Heuristic indicators, not causal SHAP values)</small>
+              </h4>
+              <div class="factors-list">
+                <div *ngFor="let factor of predictionResult().contributing_factors" class="factor-item" [class.factor-risk]="factor.direction === 'risk'" [class.factor-safe]="factor.direction === 'safe'">
+                  <div class="factor-header">
+                    <span class="factor-name">{{ factor.factor }}</span>
+                    <span class="factor-impact">{{ factor.impact }}</span>
+                  </div>
+                  <p class="factor-detail">{{ factor.detail }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recommendation Box -->
+            <div class="recommendation-box">
+              <div class="rec-title">📋 Recommended Hotel Action:</div>
+              <p class="rec-body">{{ predictionResult().recommendation }}</p>
+            </div>
+          </div>
+
+          <!-- Empty State (Before first prediction when online) -->
+          <div *ngIf="!predictionResult() && !predictionError()" class="sim-empty-state">
+            <div class="empty-icon">🔮</div>
+            <p class="empty-title">Ready for Live Inference</p>
+            <p class="empty-sub">Adjust parameters and click <strong>Predict Cancellation Risk</strong> to run the trained model pipeline through the Flask API.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>Hotel Cancellation Research & ML Evaluation Platform · Angular 22 & Flask</p>
+      <p class="footer-sub">Antonio et al. (2019) · Data Leakage Auditing · Protocol 1 vs 2 vs 3 · TabNet Verification</p>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+venv/
+env/
+ENV/
+
+# Node & Angular
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+.npm/
+
+# Dataset (can be re-downloaded via script if needed)
+hotel_bookings.csv
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
